@@ -1,0 +1,70 @@
+'   Program :  
+'   CF(Name) : DerivedAge()
+'   Programmer(Name) : 
+'   Date Created:	2023
+'   Purpose:	Derive age from date of birth (DOB).
+'/=======================================================================================
+'  AMENDMENT HISTORY:
+'   Programmer(Name) :
+'   Date Modified :
+'   Description :
+'/=======================================================================================
+
+'/=======================================================================================
+'/ This is public domain code. No guarantee as to suitability or accuracy is
+'/ given or implied. User uses this code entirely at their own risk.
+'/=======================================================================================
+
+    Dim afp As ActionFunctionParams = CType(ThisObject, ActionFunctionParams)
+        Dim dp As DataPoint = afp.ActionDataPoint ' birth date
+        Dim dp_age As DataPoint dp.Record.DataPoints.FindByFieldOID("Z_AGED")
+        Dim dp_ICON_date As DataPoint = dp.Record.DataPage.Subject.Instances.FindByFolderOID("V1").DataPages.FindByFormOID("ICON01C").Records(0).DataPoints.FindByFieldOID("ICONDT")
+
+
+        If Not CustomFunction.DataPointIsEmpty(dp) And _
+                TypeOf dp.StandardValue() Is DateTime And _
+                dp.EntryStatus.ToString() <> "NonConformant" And _
+                Not CustomFunction.DataPointIsEmpty(dp_ICON_date) And _
+                TypeOf dp_ICON_date.StandardValue() Is DateTime And _
+                dp_ICON_date.EntryStatus.ToString() <> "NonConformant" Then
+            Dim new_birth_date As DateTime = BirthDate(dp)
+            Dim age As Integer = getAge(new_birth_date, dp_ICON_date)
+            dp_age.Enter(age.ToString(), "", 0)
+        Else
+            dp_age.Enter("", "", 0)
+
+        End If
+        Return True
+
+End Function
+
+    Private Function getAge(ByVal birth_date As DateTime, ByVal dp As DataPoint) As Integer
+
+        Dim date1 As DateTime = DateTime.Parse(dp.Data)
+        Dim comparisonDate As DateTime = New DateTime(birth_date.Year, date1.Month, date1.Day)
+        Dim age As Integer
+
+        if comparisonDate.Date < birth_date.Date) then
+            age = Date.Year(-birth_date.Year - 1)
+        Else
+            age = Date.Year(-birth_date.Year)
+        End If
+
+        Return age
+
+
+    End Function
+
+
+private function BirthDate(birth_date As DataPoint) as DateTime 
+
+        Dim new_dob As DateTime = New DateTime
+        Dim dt As DateTime = DateTime.Parse(birth_date.Data)
+        Dim dateString As String = dt.Month.ToString() + "/" + "15" + "/" + dt.Year.ToString()
+
+
+        new_dob = DateTime.Parse(dateString)
+
+        Return new_dob
+
+    End Function
