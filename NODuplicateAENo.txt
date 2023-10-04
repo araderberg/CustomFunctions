@@ -1,0 +1,50 @@
+'   Program :  
+'   CF(Name) : NODuplicateAENo()
+'   Programmer(Name) : 
+'   Date Created:	2023
+'   Purpose:	If Adverse Event line number [AESPID or AESEQ] is entered more than once.
+'/=======================================================================================
+'  AMENDMENT HISTORY:
+'   Programmer(Name) :
+'   Date Modified :
+'   Description :
+'/=======================================================================================
+
+'/=======================================================================================
+'/ This is public domain code. No guarantee as to suitability or accuracy is
+'/ given or implied. User uses this code entirely at their own risk.
+'/=======================================================================================
+
+'** --- OTHER CONSTANTS --- **
+
+    	Const QUERYTEXT As String = "Adverse Event line number is recorded more than once."
+
+'** -------------------------------------------------------- **
+
+	Dim dp As DataPoint = (CType(ThisObject, ActionFunctionParams)).ActionDataPoint
+        Dim dpg As DataPage = dp.Record.DataPage
+
+        For i As Integer = 1 To dpg.Records.Count - 1
+            Dim openQuery As Boolean = False
+            Dim dpOuterLoop As DataPoint = dpg.Records(i).DataPoints(dp.Field.Name)
+            If Not dpg.Records(i).Active Then
+                Continue For
+            End If
+            For j As Integer = 1 To dpg.Records.Count - 1
+                Dim dpInnerLoop As DataPoint = dpg.Records(j).DataPoints(dp.Field.Name)
+
+                If Not dpg.Records(j).Active Or _
+                   i <= j Then
+                    Continue For
+                End If
+                If dpOuterLoop.Data = dpInnerLoop.Data And _
+                   Not CustomFunction.DataPointIsEmpty(dpOuterLoop) And _
+                   Not CustomFunction.DataPointIsEmpty(dpInnerLoop) Then
+                    openQuery = True
+                    Exit For
+                End If
+            Next
+            CustomFunction.PerformQueryAction(QUERYTEXT, 1, False, dpOuterLoop, openQuery)
+        Next
+
+        Return Nothing
