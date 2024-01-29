@@ -1,3 +1,8 @@
+![Screenshot](rave_cert.png)
+
+[![Rave EDC](https://img.shields.io/badge/Rave-3670A0?style=for-the-badge&logo=rave&logoColor=ffdddd)](https://www.medidata.com/)
+[![C #](https://img.shields.io/badge/csharp-3670A0?style=for-the-badge&logo=csharp&logoColor=ffdddd)](https://www.microsoft.com/)
+----------------------------------------------------
 # CustomFunctions
 
 - ![#f03c15](https://via.placeholder.com/15/f03c15/f03c15.png) `Custom Functions written in Visual Basic`
